@@ -1,0 +1,7 @@
+.vs
+*.suo
+_Resharper.CardFramework
+*.user
+bin
+obj
+packages
