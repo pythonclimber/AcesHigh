@@ -22,28 +22,26 @@ namespace CardFramework.Decks
 
         #region Constructors
 
-        //IConvertible covers passing in any enumeration generically at card creation point within deck
         public Card(string face, int faceNum, string suit)
             : this(face, faceNum, suit, -1)
         {
-            
+
         }
 
-        //IConvertible covers passing in any enumeration generically at card creation point within deck
         public Card(string face, int faceNum, string suit, int index)
         {
-            //const string sExt = ".png";
+            const string sExt = ".png";
 
             Face = face;
             FaceNum = faceNum;
             Suit = suit;
             Index = index;
 
-            //var imageSuit = Suit.Substring(0, 1).ToLower();
-            //var imageFace = FaceNum > 10 ? Face.Substring(0, 1).ToLower() : FaceNum.ToString();
-            //var fileName = imageSuit + imageFace + sExt;
+            var imageSuit = Suit.Substring(0, 1).ToLower();
+            var imageFace = FaceNum > 10 ? Face.Substring(0, 1).ToLower() : FaceNum.ToString();
+            var fileName = imageSuit + imageFace + sExt;
 
-            //Image = Image.FromFile(fileName);
+            Image = Image.FromFile(fileName);
         }
 
         #endregion
