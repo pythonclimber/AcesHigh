@@ -1,29 +1,22 @@
-﻿using System;
+﻿using CardFramework.Decks;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CardFramework.Decks;
 
-namespace CardFramework
-{
-    public class CribHand : Hand
-    {
+namespace CardFramework {
+    public class CribHand : Hand {
         public bool IsCrib { get; protected set; }
 
         #region Construction
 
-        public CribHand(bool isCrib) : this(new List<Card>(), isCrib)
-        {
-            
+        public CribHand(bool isCrib) : this(new List<Card>(), isCrib) {
+
         }
 
         public CribHand(List<Card> cards)
-            : this(cards, false)
-        {
+            : this(cards, false) {
         }
 
-        public CribHand(List<Card> cards, bool isCrib) : base(cards, cards.Count)
-        {
+        public CribHand(List<Card> cards, bool isCrib) : base(cards, cards.Count) {
             IsCrib = isCrib;
         }
 
@@ -35,13 +28,11 @@ namespace CardFramework
         /// This method is not implemented because CribHand requires the player and countNobs boolean to be passed in.
         /// </summary>
         /// <returns></returns>
-        public override void ScoreHand()
-        {
+        public override void ScoreHand() {
             throw new NotImplementedException();
         }
 
-        public override string DisplayHand()
-        {
+        public override string DisplayHand() {
             throw new NotImplementedException();
         }
 
@@ -51,8 +42,7 @@ namespace CardFramework
         /// <param name="countNobs"></param>
         /// <param name="player"></param>
         /// <returns>Returns player score</returns>
-        public int ScoreHand(bool countNobs, Card turnCard)
-        {
+        public int ScoreHand(bool countNobs, Card turnCard) {
             int score = 0;
             int num3s = 0;
             int num4s = 0;
@@ -60,13 +50,11 @@ namespace CardFramework
             Card[] cards;
             var tempCards = new List<Card>(this.Cards);
 
-            if (countNobs)
-            {
+            if (countNobs) {
                 this.CountNobs(ref score, tempCards, turnCard);
             }
 
-            if (turnCard != null)
-            {
+            if (turnCard != null) {
                 tempCards.Add(turnCard);
             }
 
@@ -74,8 +62,7 @@ namespace CardFramework
 
             Sort(tempCards);
 
-            for (int i = 2; i <= tempCards.Count; i++)
-            {
+            for (int i = 2; i <= tempCards.Count; i++) {
                 cards = new Card[i];
                 this.CountFifteens(ref score, i, 0, cards, tempCards);
             }
@@ -83,8 +70,7 @@ namespace CardFramework
             cards = new Card[2];
             CountSets(ref score, 2, 0, cards, tempCards);
 
-            for (int i = 3; i <= tempCards.Count; i++)
-            {
+            for (int i = 3; i <= tempCards.Count; i++) {
                 cards = new Card[i];
                 this.CountRuns(ref num3s, ref num4s, ref num5s, i, 0, cards, tempCards);
             }
@@ -99,20 +85,16 @@ namespace CardFramework
         /// </summary>
         /// <param name="cardsToKeep"></param>
         /// <returns>Returns cards to be passed to the crib by a human player</returns>
-        public List<Card> GetCardsToPull(List<Card> cardsToKeep)
-        {
+        public List<Card> GetCardsToPull(List<Card> cardsToKeep) {
             var outCards = new List<Card>();
 
-            foreach (Card card in this.Cards)
-            {
-                if (cardsToKeep.IndexOf(card) == -1)
-                {
+            foreach (Card card in this.Cards) {
+                if (cardsToKeep.IndexOf(card) == -1) {
                     outCards.Add(card);
                 }
             }
 
-            foreach (Card card in outCards)
-            {
+            foreach (Card card in outCards) {
                 this.Cards.RemoveAt(this.Cards.IndexOf(card));
             }
 
@@ -124,18 +106,14 @@ namespace CardFramework
         /// This method sorts a temporary copy of the hand for scoring so that Turn Card is not lost in hand
         /// For the temp copy to be sorted, the method takes a list of cards and sorts the passed in list instead of the list attribute of the calling object.
         /// </summary>
-        public static void Sort(List<Card> cards)
-        {
+        public static void Sort(List<Card> cards) {
             int i, j;
             Card tempCard;
 
-            for (i = 0; i < cards.Count; i++)
-            {
+            for (i = 0; i < cards.Count; i++) {
                 tempCard = cards[i];
-                for (j = (i - 1); j >= 0; j--)
-                {
-                    if (cards[j].FaceNum <= tempCard.FaceNum)
-                    {
+                for (j = (i - 1); j >= 0; j--) {
+                    if (cards[j].FaceNum <= tempCard.FaceNum) {
                         break;
                     }
                     cards[j + 1] = cards[j];
@@ -144,8 +122,7 @@ namespace CardFramework
             }
         }
 
-        public void AddCards(IEnumerable<Card> cardsToAdd)
-        {
+        public void AddCards(IEnumerable<Card> cardsToAdd) {
             Cards.AddRange(cardsToAdd);
         }
         #endregion
@@ -160,35 +137,25 @@ namespace CardFramework
         /// <param name="start"></param>
         /// <param name="cards"></param>
         /// <param name="tempCards"></param>
-        protected virtual void CountFifteens(ref int score, int selected, int start, Card[] cards, List<Card> tempCards)
-        {
+        protected virtual void CountFifteens(ref int score, int selected, int start, Card[] cards, List<Card> tempCards) {
             selected--;
-            for (int i = start; i < tempCards.Count; i++)
-            {
+            for (int i = start; i < tempCards.Count; i++) {
                 cards[selected] = tempCards[i];
-                if (selected == 0)
-                {
+                if (selected == 0) {
                     int total = 0;
-                    for (int j = cards.GetUpperBound(0); j >= cards.GetLowerBound(0); j--)
-                    {
-                        if (cards[j].FaceNum >= 10)
-                        {
+                    for (int j = cards.GetUpperBound(0); j >= cards.GetLowerBound(0); j--) {
+                        if (cards[j].FaceNum >= 10) {
                             total += 10;
-                        }
-                        else
-                        {
+                        } else {
 
                             total += cards[j].FaceNum + 1;
                         }
                     }
 
-                    if (total == 15)
-                    {
+                    if (total == 15) {
                         score += 2;
                     }
-                }
-                else
-                {
+                } else {
                     start++;
                     CountFifteens(ref score, selected, start, cards, tempCards);
                 }
@@ -203,27 +170,19 @@ namespace CardFramework
         /// <param name="start"></param>
         /// <param name="cards"></param>
         /// <param name="tempCards"></param>
-        protected virtual void CountSets(ref int score, int selected, int start, Card[] cards, List<Card> tempCards)
-        {
+        protected virtual void CountSets(ref int score, int selected, int start, Card[] cards, List<Card> tempCards) {
             selected--;
-            for (int i = start; i < tempCards.Count; i++)
-            {
+            for (int i = start; i < tempCards.Count; i++) {
                 cards[selected] = tempCards[i];
-                if (selected == 0)
-                {
-                    for (int j = cards.GetUpperBound(0) - 1; j >= cards.GetLowerBound(0); j--)
-                    {
-                        for (int k = 1; k + j <= cards.GetUpperBound(0); k++)
-                        {
-                            if (cards[j].FaceNum == cards[k].FaceNum)
-                            {
+                if (selected == 0) {
+                    for (int j = cards.GetUpperBound(0) - 1; j >= cards.GetLowerBound(0); j--) {
+                        for (int k = 1; k + j <= cards.GetUpperBound(0); k++) {
+                            if (cards[j].FaceNum == cards[k].FaceNum) {
                                 score += 2;
                             }
                         }
                     }
-                }
-                else
-                {
+                } else {
                     start++;
                     CountSets(ref score, selected, start, cards, tempCards);
                 }
@@ -241,41 +200,29 @@ namespace CardFramework
         /// <param name="start"></param>
         /// <param name="cards"></param>
         /// <param name="tempCards"></param>
-        protected virtual void CountRuns(ref int num3s, ref int num4s, ref int num5s, int selected, int start, Card[] cards, List<Card> tempCards)
-        {
+        protected virtual void CountRuns(ref int num3s, ref int num4s, ref int num5s, int selected, int start, Card[] cards, List<Card> tempCards) {
             selected--;
-            for (int i = start; i < tempCards.Count; i++)
-            {
+            for (int i = start; i < tempCards.Count; i++) {
                 cards[selected] = tempCards[i];
-                if (selected == 0)
-                {
+                if (selected == 0) {
                     bool isRun = true;
-                    for (int j = cards.GetUpperBound(0); j > cards.GetLowerBound(0); j--)
-                    {
-                        if (cards[j - 1].FaceNum != (cards[j].FaceNum + 1))
-                        {
+                    for (int j = cards.GetUpperBound(0); j > cards.GetLowerBound(0); j--) {
+                        if (cards[j - 1].FaceNum != (cards[j].FaceNum + 1)) {
                             isRun = false;
                             break;
                         }
                     }
 
-                    if (isRun && cards.Length == 3)
-                    {
+                    if (isRun && cards.Length == 3) {
                         num3s++;
-                    }
-                    else if (isRun && cards.Length == 4)
-                    {
+                    } else if (isRun && cards.Length == 4) {
                         num3s = 0;
                         num4s++;
-                    }
-                    else if (isRun && cards.Length == 5)
-                    {
+                    } else if (isRun && cards.Length == 5) {
                         num4s = 0;
                         num5s++;
                     }
-                }
-                else
-                {
+                } else {
                     start++;
                     CountRuns(ref num3s, ref num4s, ref num5s, selected, start, cards, tempCards);
                 }
@@ -286,12 +233,9 @@ namespace CardFramework
         /// Called from ScoreHand to determine if a player has Nobs
         /// </summary>
         /// <param name="score"></param>
-        protected virtual void CountNobs(ref int score, List<Card> tempCards, Card turnCard)
-        {
-            for (int i = 0; i < tempCards.Count; i++)
-            {
-                if (tempCards[i].FaceNum == 10 && tempCards[i].Suit == turnCard.Suit)
-                {
+        protected virtual void CountNobs(ref int score, List<Card> tempCards, Card turnCard) {
+            for (int i = 0; i < tempCards.Count; i++) {
+                if (tempCards[i].FaceNum == 10 && tempCards[i].Suit == turnCard.Suit) {
                     score++;
                 }
             }
@@ -301,28 +245,20 @@ namespace CardFramework
         /// Called from ScoreHand to determine if a player has a flush
         /// This must be overridden for the Crib as only a flush of all 5 cards counts for the crib
         /// </summary>
-        protected virtual void CountFlush(ref int score, List<Card> tempCards)
-        {
+        protected virtual void CountFlush(ref int score, List<Card> tempCards) {
             int cardsInFlush = 1;
 
-            for (int i = 0; i < tempCards.Count - 1; i++)
-            {
-                if (tempCards[i].Suit != tempCards[i + 1].Suit)
-                {
+            for (int i = 0; i < tempCards.Count - 1; i++) {
+                if (tempCards[i].Suit != tempCards[i + 1].Suit) {
                     break;
-                }
-                else
-                {
+                } else {
                     cardsInFlush++;
                 }
             }
 
-            if (cardsInFlush == 5)
-            {
+            if (cardsInFlush == 5) {
                 score += cardsInFlush;
-            }
-            else if (cardsInFlush == 4 && !IsCrib)
-            {
+            } else if (cardsInFlush == 4 && !IsCrib) {
                 score += cardsInFlush;
             }
 
