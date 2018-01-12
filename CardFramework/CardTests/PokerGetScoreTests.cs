@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CardTests {
     [TestFixture]
-    public class PokerTests {
+    public class PokerGetScoreTests {
         #region Straight Tests
 
         [Test]
