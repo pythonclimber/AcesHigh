@@ -2,12 +2,8 @@
 using System.Drawing;
 
 
-namespace CardFramework.Decks
-{
-    public class Card
-    {
-        #region Public Properties
-
+namespace CardFramework.Decks {
+    public class Card {
         public string Suit { get; protected set; }
 
         public string Face { get; protected set; }
@@ -18,18 +14,13 @@ namespace CardFramework.Decks
 
         public int Index { get; protected set; }
 
-        #endregion
-
-        #region Constructors
 
         public Card(string face, int faceNum, string suit)
-            : this(face, faceNum, suit, -1)
-        {
+            : this(face, faceNum, suit, -1) {
 
         }
 
-        public Card(string face, int faceNum, string suit, int index)
-        {
+        public Card(string face, int faceNum, string suit, int index) {
             const string sExt = ".png";
 
             Face = face;
@@ -41,45 +32,24 @@ namespace CardFramework.Decks
             var imageFace = FaceNum > 10 ? Face.Substring(0, 1).ToLower() : FaceNum.ToString();
             var fileName = imageSuit + imageFace + sExt;
 
-            Image = Image.FromFile(fileName);
+            //Image = Image.FromFile(fileName);
         }
 
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Returns shortened string version of card
-        /// </summary>
-        /// <param name="isShort"></param>
-        /// <returns></returns>
-        public string ToString(bool isShort = false)
-        {
-            if (!isShort)
-            {
-                return $"The {Face,-5} of {Suit,-8}";
-            }
-
-            return $"{Face,-5} {Suit,-8}";
+        public string ToString(bool isShort = false) {
+            return !isShort ? $"The {Face,-5} of {Suit,-8}" : $"{Face,-5} {Suit,-8}";
         }
 
-        public int FaceValue(bool aceHigh = false)
-        {
-            if (Face == CardFaces.Ace && aceHigh)
-            {
+        public int FaceValue(bool aceHigh = false) {
+            if (Face == CardFaces.AceHigh.Key) {
                 return 11;
             }
 
             return FaceNum >= 10 ? 10 : FaceNum;
         }
-
-        #endregion
     }
 
-    public class CardComparer : IEqualityComparer<Card>
-    {
-        public bool Equals(Card x, Card y)
-        {
+    public class CardComparer : IEqualityComparer<Card> {
+        public bool Equals(Card x, Card y) {
             //if x and y are literally the same object, return true
             if (ReferenceEquals(x, y))
                 return true;
@@ -92,8 +62,7 @@ namespace CardFramework.Decks
             return x.Face == y.Face && x.Suit == y.Suit;
         }
 
-        public int GetHashCode(Card card)
-        {
+        public int GetHashCode(Card card) {
             if (ReferenceEquals(card, null))
                 return 0;
 
