@@ -32,7 +32,7 @@ namespace CardFramework.Decks {
             var imageFace = FaceNum > 10 ? Face.Substring(0, 1).ToLower() : FaceNum.ToString();
             var fileName = imageSuit + imageFace + sExt;
 
-            Image = Image.FromFile(fileName);
+            //Image = Image.FromFile(fileName);
         }
 
         public string ToString(bool isShort = false) {
@@ -40,7 +40,7 @@ namespace CardFramework.Decks {
         }
 
         public int FaceValue(bool aceHigh = false) {
-            if (Face == CardFaces.Ace && aceHigh) {
+            if (Face == CardFaces.AceHigh.Key) {
                 return 11;
             }
 

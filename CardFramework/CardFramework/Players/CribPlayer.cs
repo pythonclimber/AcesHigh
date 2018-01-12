@@ -9,6 +9,8 @@ namespace CardFramework {
         private bool _isComputer;
         private bool _isDealer;
 
+        public int NumCards => Hand.Count;
+
         public bool IsDealer { get; internal set; }
 
         public CribPlayer() : this(false) {
@@ -212,7 +214,7 @@ namespace CardFramework {
                 if (selected == 0) {
 
                     var scoreHand = new List<Card>(cards.ToList());
-                    int score = scoreHand.ScoreHand(false, TurnCard);
+                    int score = 0;//scoreHand.ScoreHand(false, TurnCard);
                     scores.Add(score);
                     combos.Add(new List<Card>(scoreHand));
 

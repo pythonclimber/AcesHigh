@@ -13,10 +13,10 @@ namespace CardFramework {
         }
 
         public void DealCards() {
-            for (int i = 0; i < player.Hand.NumCards; i++) {
-                player.ReceiveCard(deck.DealCards(1));
-                compPlayer.ReceiveCard(deck.DealCards(1));
-            }
+            //for (int i = 0; i < player.NumCards.Count; i++) {
+            //    player.ReceiveCard(deck.DealCards(1));
+            //    compPlayer.ReceiveCard(deck.DealCards(1));
+            //}
         }
 
         public void ScoreHand() {

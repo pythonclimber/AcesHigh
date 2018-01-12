@@ -43,8 +43,8 @@ namespace CardFramework.Decks {
                     throw new ApplicationException("Cannot deal cards if deck is empty");
                 }
 
-                cards.Add(cards[0]);
-                cards.RemoveAt(0);
+                cards.Add(Cards[0]);
+                Cards.RemoveAt(0);
             }
 
             return cards;

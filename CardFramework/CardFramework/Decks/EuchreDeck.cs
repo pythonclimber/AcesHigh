@@ -18,12 +18,12 @@ namespace CardFramework.Decks {
         protected override List<string> GetFaces() {
             return new List<string>
                        {
-                           CardFaces.Nine,
-                           CardFaces.Ten,
-                           CardFaces.Jack,
-                           CardFaces.Queen,
-                           CardFaces.King,
-                           CardFaces.Ace
+                           CardFaces.Nine.Key,
+                           CardFaces.Ten.Key,
+                           CardFaces.Jack.Key,
+                           CardFaces.Queen.Key,
+                           CardFaces.King.Key,
+                           CardFaces.AceHigh.Key
                        };
         }
     }
