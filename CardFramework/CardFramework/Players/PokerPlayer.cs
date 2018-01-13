@@ -27,8 +27,6 @@ namespace CardFramework {
     public class PokerPlayer : Player {
         #region Properties
 
-        public List<Card> Hand { get; protected set; }
-
         public PokerHandValues HandValue { get; protected set; }
 
         public bool IsDealer { get; protected set; }
@@ -50,7 +48,6 @@ namespace CardFramework {
         #endregion
 
         public PokerPlayer() {
-            Hand = new List<Card>();
             BankRoll = 0M;
             HighCard = 0;
             HighSetValue = 0;

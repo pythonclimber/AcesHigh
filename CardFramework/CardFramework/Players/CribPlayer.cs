@@ -7,7 +7,8 @@ namespace CardFramework {
     public class CribPlayer : Player {
         private CribHand _hand;
         private bool _isComputer;
-        private bool _isDealer;
+        //private bool _isDealer;
+        private List<Card> _crib;
 
         public bool IsDealer { get; set; }
         public CribPlayer() : this(false, false) {
@@ -72,7 +73,7 @@ namespace CardFramework {
             int play = -1;
             int indexFifteen;
             int indexThirtyOne;
-            int pairSet;
+            //int pairSet;
             int indexStraight;
             int indexSet;
 

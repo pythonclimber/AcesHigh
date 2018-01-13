@@ -20,6 +20,7 @@
         protected Player(bool isComp, int score) {
             IsComputer = IsComputer;
             Score = score;
+            Hand = new List<Card>();
         }
 
         #endregion

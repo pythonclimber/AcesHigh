@@ -6,8 +6,6 @@ using System.Linq;
 
 namespace CardFramework {
     public class EuchrePlayer : Player {
-        public List<Card> Hand { get; protected set; }
-
         public EuchrePlayer MyPartner { get; protected set; }
 
         public bool IsDealer { get; internal set; }
