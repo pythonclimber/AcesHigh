@@ -17,7 +17,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Four.Key, 4, CardSuits.Spades, -1));
             player.Hand.Add(new Card(CardFaces.Seven.Key, 7, CardSuits.Clubs, -1));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(player.HandValue, PokerHandValues.Straight);
         }
@@ -32,7 +32,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Four.Key, 4, CardSuits.Spades, -1));
             player.Hand.Add(new Card(CardFaces.Seven.Key, 7, CardSuits.Clubs, -1));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(player.HandValue, PokerHandValues.Straight);
         }
@@ -47,7 +47,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Four.Key, 4, CardSuits.Spades, -1));
             player.Hand.Add(new Card(CardFaces.Seven.Key, 7, CardSuits.Clubs, -1));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(player.HandValue, PokerHandValues.Straight);
         }
@@ -62,7 +62,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Four.Key, 4, CardSuits.Spades, -1));
             player.Hand.Add(new Card(CardFaces.Seven.Key, 7, CardSuits.Clubs, -1));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreNotEqual(player.HandValue, PokerHandValues.Straight);
             Assert.AreEqual(player.HandValue, PokerHandValues.HighCard);
@@ -86,7 +86,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Jack.Key, 11, suit));
             player.Hand.Add(new Card(CardFaces.Queen.Key, 12, suit));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.Flush, player.HandValue);
             Assert.AreEqual(12, player.HighCard);
@@ -105,7 +105,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Jack.Key, 11, suit));
             player.Hand.Add(new Card(CardFaces.Queen.Key, 12, suit));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(player.HandValue, PokerHandValues.StraightFlush);
             Assert.AreEqual(player.HighCard, 12);
@@ -124,7 +124,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Jack.Key, 11, suit));
             player.Hand.Add(new Card(CardFaces.Queen.Key, 12, suit));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(player.HandValue, PokerHandValues.StraightFlush);
             Assert.AreEqual(player.HighCard, 14);
@@ -146,7 +146,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Three.Key, 3, CardSuits.Clubs));
             player.Hand.Add(new Card(highCardFace, cardValue, CardSuits.Clubs));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.Pair, player.HandValue);
             Assert.AreEqual(highCardValue, player.HighCard);
@@ -165,7 +165,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Clubs));
             player.Hand.Add(new Card(CardFaces.Three.Key, 3, CardSuits.Clubs));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.Pair, player.HandValue);
             Assert.AreEqual(highCardValue, player.HighCard);
@@ -182,7 +182,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Five.Key, 5, CardSuits.Diamonds));
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Spades));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.TwoPair, player.HandValue);
             Assert.AreEqual(13, player.HighCard);
@@ -201,7 +201,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.Five.Key, 5, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.TwoPair, player.HandValue);
             Assert.AreEqual(highCardValue, player.HighCard);
@@ -219,7 +219,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.TwoPair, player.HandValue);
             Assert.AreEqual(5, player.HighCard);
@@ -240,7 +240,7 @@ namespace CardTests {
             player.Hand.Add(new Card(highCardFace, cardValue, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.Five.Key, 5, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.ThreeOfAKind, player.HandValue);
             Assert.AreEqual(5, player.HighSetValue);
@@ -259,7 +259,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Spades));
             player.Hand.Add(new Card(highCardFace, cardValue, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.ThreeOfAKind, player.HandValue);
             Assert.AreEqual(13, player.HighSetValue);
@@ -276,7 +276,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Two.Key, 2, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.Five.Key, 5, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.FullHouse, player.HandValue);
             Assert.AreEqual(5, player.HighSetValue);
@@ -294,7 +294,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Two.Key, 2, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.Two.Key, 2, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.FullHouse, player.HandValue);
             Assert.AreEqual(5, player.HighSetValue);
@@ -312,7 +312,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Two.Key, 2, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.Two.Key, 2, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.FourOfAKind, player.HandValue);
             Assert.AreEqual(2, player.HighSetValue);
@@ -330,7 +330,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.King.Key, 13, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.FourOfAKind, player.HandValue);
             Assert.AreEqual(13, player.HighSetValue);
@@ -347,7 +347,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Ace.Key, 1, CardSuits.Spades));
             player.Hand.Add(new Card(CardFaces.Ace.Key, 1, CardSuits.Diamonds));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.FourOfAKind, player.HandValue);
             Assert.AreEqual(14, player.HighSetValue);
@@ -367,7 +367,7 @@ namespace CardTests {
             player.Hand.Add(new Card(CardFaces.Three.Key, 3, CardSuits.Clubs));
             player.Hand.Add(new Card(highCardFace, cardValue, CardSuits.Clubs));
 
-            player.ScoreHandLegacy();
+            player.ScoreHand();
 
             Assert.AreEqual(PokerHandValues.HighCard, player.HandValue);
             Assert.AreEqual(highCardValue, player.HighCard);
