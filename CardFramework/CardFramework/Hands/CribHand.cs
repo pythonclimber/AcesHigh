@@ -1,12 +1,10 @@
 ﻿using CardFramework.Decks;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CardFramework {
     public class CribHand : Hand {
         public bool IsCrib { get; protected set; }
-
-        #region Construction
 
         public CribHand(bool isCrib) : this(new List<Card>(), isCrib) {
 
@@ -20,48 +18,42 @@ namespace CardFramework {
             IsCrib = isCrib;
         }
 
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// This method is not implemented because CribHand requires the player and countNobs boolean to be passed in.
-        /// </summary>
-        /// <returns></returns>
-        public override void ScoreHand() {
-            throw new NotImplementedException();
-        }
-
         public override string DisplayHand() {
-            throw new NotImplementedException();
+            var result = string.Empty;
+
+            foreach (var card in Cards) {
+                result += card.ToString();
+            }
+
+            return result;
         }
 
         /// <summary>
         /// Scores the players hand using a boolean to determine whether the player should be looking for Nobs.
         /// </summary>
         /// <param name="countNobs"></param>
-        /// <param name="player"></param>
+        /// <param name="turnCard"></param>
         /// <returns>Returns player score</returns>
-        public int ScoreHand(bool countNobs, Card turnCard) {
-            int score = 0;
-            int num3s = 0;
-            int num4s = 0;
-            int num5s = 0;
-            Card[] cards;
+        public int GetScore(bool countNobs, Card turnCard) {
+            var score = 0;
+            var num3s = 0;
+            var num4s = 0;
+            var num5s = 0;
             var tempCards = new List<Card>(this.Cards);
 
             if (countNobs) {
-                this.CountNobs(ref score, tempCards, turnCard);
+                score += CountNobs(tempCards, turnCard);
             }
 
             if (turnCard != null) {
                 tempCards.Add(turnCard);
             }
 
-            CountFlush(ref score, tempCards);
+            score += CountFlush(tempCards);
 
-            Sort(tempCards);
+            tempCards.Sort((c1, c2) => c1.FaceNum - c2.FaceNum);
 
+            Card[] cards;
             for (int i = 2; i <= tempCards.Count; i++) {
                 cards = new Card[i];
                 this.CountFifteens(ref score, i, 0, cards, tempCards);
@@ -85,47 +77,25 @@ namespace CardFramework {
         /// </summary>
         /// <param name="cardsToKeep"></param>
         /// <returns>Returns cards to be passed to the crib by a human player</returns>
-        public List<Card> GetCardsToPull(List<Card> cardsToKeep) {
+        public List<Card> GetCardsToPass(List<Card> cardsToKeep) {
             var outCards = new List<Card>();
 
-            foreach (Card card in this.Cards) {
+            foreach (var card in this.Cards) {
                 if (cardsToKeep.IndexOf(card) == -1) {
                     outCards.Add(card);
                 }
             }
 
-            foreach (Card card in outCards) {
+            foreach (var card in outCards) {
                 this.Cards.RemoveAt(this.Cards.IndexOf(card));
             }
 
             return outCards;
         }
 
-        /// <summary>
-        /// Sort method specific to CribHand.
-        /// This method sorts a temporary copy of the hand for scoring so that Turn Card is not lost in hand
-        /// For the temp copy to be sorted, the method takes a list of cards and sorts the passed in list instead of the list attribute of the calling object.
-        /// </summary>
-        public static void Sort(List<Card> cards) {
-            int i, j;
-            Card tempCard;
-
-            for (i = 0; i < cards.Count; i++) {
-                tempCard = cards[i];
-                for (j = (i - 1); j >= 0; j--) {
-                    if (cards[j].FaceNum <= tempCard.FaceNum) {
-                        break;
-                    }
-                    cards[j + 1] = cards[j];
-                }
-                cards[j + 1] = tempCard;
-            }
-        }
-
         public void AddCards(IEnumerable<Card> cardsToAdd) {
             Cards.AddRange(cardsToAdd);
         }
-        #endregion
 
         #region Protected Scoring and Sorting Methods
 
@@ -142,15 +112,7 @@ namespace CardFramework {
             for (int i = start; i < tempCards.Count; i++) {
                 cards[selected] = tempCards[i];
                 if (selected == 0) {
-                    int total = 0;
-                    for (int j = cards.GetUpperBound(0); j >= cards.GetLowerBound(0); j--) {
-                        if (cards[j].FaceNum >= 10) {
-                            total += 10;
-                        } else {
-
-                            total += cards[j].FaceNum + 1;
-                        }
-                    }
+                    var total = cards.Sum(c => c.FaceValue());
 
                     if (total == 15) {
                         score += 2;
@@ -233,23 +195,21 @@ namespace CardFramework {
         /// Called from ScoreHand to determine if a player has Nobs
         /// </summary>
         /// <param name="score"></param>
-        protected virtual void CountNobs(ref int score, List<Card> tempCards, Card turnCard) {
-            for (int i = 0; i < tempCards.Count; i++) {
-                if (tempCards[i].FaceNum == 10 && tempCards[i].Suit == turnCard.Suit) {
-                    score++;
-                }
-            }
+        protected virtual int CountNobs(List<Card> tempCards, Card turnCard) {
+            return tempCards.Any(c => c.Face == CardFaces.Jack.Key && c.Suit == turnCard.Suit)
+                ? 1
+                : 0;
         }
 
         /// <summary>
         /// Called from ScoreHand to determine if a player has a flush
         /// This must be overridden for the Crib as only a flush of all 5 cards counts for the crib
         /// </summary>
-        protected virtual void CountFlush(ref int score, List<Card> tempCards) {
-            int cardsInFlush = 1;
+        protected virtual int CountFlush(List<Card> tempCards) {
+            var cardsInFlush = 1;
 
-            for (int i = 0; i < tempCards.Count - 1; i++) {
-                if (tempCards[i].Suit != tempCards[i + 1].Suit) {
+            for (int i = 1; i < tempCards.Count; i++) {
+                if (tempCards[i - 1].Suit != tempCards[i].Suit) {
                     break;
                 } else {
                     cardsInFlush++;
@@ -257,11 +217,12 @@ namespace CardFramework {
             }
 
             if (cardsInFlush == 5) {
-                score += cardsInFlush;
-            } else if (cardsInFlush == 4 && !IsCrib) {
-                score += cardsInFlush;
+                return 5;
             }
-
+            if (cardsInFlush == 4 && !IsCrib) {
+                return 4;
+            }
+            return 0;
         }
 
         #endregion

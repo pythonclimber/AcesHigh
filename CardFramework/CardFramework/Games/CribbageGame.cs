@@ -8,7 +8,7 @@ namespace CardFramework {
 
         public CribbageGame() {
             player = new CribPlayer();
-            compPlayer = new CribPlayer(true);
+            compPlayer = new CribPlayer(true, false);
             deck = new StandardDeck();
         }
 
