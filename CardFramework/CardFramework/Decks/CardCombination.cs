@@ -2,12 +2,12 @@
 
 namespace CardFramework.Decks {
     public class CardCombination {
-        private List<Card> _cards;
-        private int _score;
+        public int Score { get; }
+        public List<Card> Cards { get; }
 
         public CardCombination(List<Card> cards, int score) {
-            _cards = cards;
-            _score = score;
+            Cards = cards;
+            Score = score;
         }
     }
 }

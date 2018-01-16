@@ -70,9 +70,5 @@ namespace CardFramework {
         public override string DisplayHand() {
             throw new NotImplementedException();
         }
-
-        public override void ScoreHand() {
-            throw new NotImplementedException();
-        }
     }
 }

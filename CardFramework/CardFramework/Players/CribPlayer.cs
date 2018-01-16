@@ -5,74 +5,67 @@ using System.Linq;
 
 namespace CardFramework {
     public class CribPlayer : Player {
-        protected List<Card> Hand;
+        private CribHand _hand;
         private bool _isComputer;
         private bool _isDealer;
 
-        public int NumCards => Hand.Count;
-
-        public bool IsDealer { get; internal set; }
-
-        public CribPlayer() : this(false) {
+        public bool IsDealer { get; set; }
+        public CribPlayer() : this(false, false) {
         }
 
-        public CribPlayer(bool isComputer) {
-            Hand = new List<Card>();
+        public CribPlayer(bool isComputer, bool isDealer) {
+            _hand = new CribHand(false);
             _isComputer = isComputer;
+            IsDealer = isDealer;
         }
 
-        public int GetScore(List<Card> crib, Card turnCard) {
-            Score += ScoreHand(true, turnCard);
-            if (_isDealer && crib != null) {
-                //todo: Score Crib
+        public void CountHand(Card turnCard) {
+            _hand.GetScore(true, turnCard);
+        }
+
+        public void CountCrib(Card turnCard) {
+            if (!_isDealer) {
+                throw new ApplicationException("Only the dealer is allowed to count the crib");
             }
-            return Score;
+
+            //todo: handle crib scoring
         }
 
-        public void ReceiveCards(List<Card> cards) {
-            Hand.AddRange(cards);
+        public void TakeCards(List<Card> cardsToAdd) {
+            _hand.AddCards(cardsToAdd);
         }
 
-        public void PassToCrib(int index1, int index2, List<Card> crib) {
-            var tempCards = new List<Card> { Hand[index1], Hand[index2] };
+        public List<Card> PassCardsToCrib(int index1, int index2, List<Card> crib) {
+            var cardsToPass = new List<Card> { _hand.Cards[index1], _hand.Cards[index2] };
 
-            Hand.RemoveAt(index1);
-            Hand.RemoveAt(index2);
+            _hand.Cards.RemoveAt(index1);
+            _hand.Cards.RemoveAt(index2);
 
-            crib.AddRange(tempCards);
+            return cardsToPass;
         }
 
-        public void CompPassToCrib(List<Card> crib) {
+        public void ChooseCardsForCrib(List<Card> crib) {
             if (IsComputer) {
                 var cards = new Card[4];
-                var scores = new List<int>();
-                var combos = new List<List<Card>>();
-                var tempHand = new List<Card>(Hand);
+                var combos = new List<CardCombination>();
+                var cardsToScore = new List<Card>(_hand.Cards);
                 var max = 0;
-                CountTotalByCombo(4, 6, 0, cards, tempHand, scores, combos);
+                CountTotalByCombo(4, 6, 0, cards, cardsToScore, combos);
 
-                if (combos.Count == scores.Count) {
-                    for (int i = 1; i < scores.Count; i++) {
-                        if (scores[i] > scores[max]) {
-                            max = i;
-                        }
+                for (var i = 1; i < combos.Count; i++) {
+                    if (combos[i].Score > combos[max].Score) {
+                        max = i;
                     }
-
-                    var tempCards = Hand.Where(c => combos[max].IndexOf(c) == -1).ToList();
-
-                    crib.AddRange(tempCards);
                 }
+
+                var tempCards = _hand.Cards.Where(c => combos[max].Cards.IndexOf(c) == -1);
+
+                crib.AddRange(tempCards);
             }
         }
 
-        protected int ScoreHand(bool countNobs, Card turnCard) {
-            return 0;
-        }
-
-        public void DisplayCards() {
-            foreach (var card in Hand) {
-                Console.WriteLine(card.ToString());
-            }
+        public override string DisplayHand() {
+            return _hand.DisplayHand();
         }
 
         public static int CompCardToPlay(List<Card> playable, List<Card> played, int totalPlayed) {
@@ -142,7 +135,22 @@ namespace CardFramework {
         }
 
         public void ClearLastHand() {
-            Hand.Clear();
+            _hand = new CribHand(false);
+        }
+
+        protected void CountTotalByCombo(int selected, int total, int start, Card[] cards, List<Card> tempHand, List<CardCombination> combos) {
+            selected--;
+            for (int i = start; i < tempHand.Count; i++) {
+                cards[selected] = tempHand[i];
+                if (selected == 0) {
+                    var comboToScore = new CribHand(cards.ToList());
+                    var score = comboToScore.GetScore(false, null);
+                    combos.Add(new CardCombination(comboToScore.Cards, score));
+                } else {
+                    start++;
+                    CountTotalByCombo(selected, total, start, cards, tempHand, combos);
+                }
+            }
         }
 
         private static int CanMakeStraight(List<Card> playable, List<Card> played, int totalPlayed) {
@@ -153,7 +161,7 @@ namespace CardFramework {
                     cards.Add(card);
                 }
                 cards.Add(playable[i]);
-                CribHand.Sort(cards);
+                //CribHand.Sort(cards);
                 if (IsStraight(cards.ToArray()) && playable[i].FaceNum + totalPlayed <= 31) {
                     return i;
                 }
@@ -205,32 +213,6 @@ namespace CardFramework {
 
 
             return -1;
-        }
-
-        protected void CountTotalByCombo(int selected, int total, int start, Card[] cards, List<Card> tempHand, List<int> scores, List<List<Card>> combos) {
-            selected--;
-            for (int i = start; i < tempHand.Count; i++) {
-                cards[selected] = tempHand[i];
-                if (selected == 0) {
-
-                    var scoreHand = new List<Card>(cards.ToList());
-                    int score = 0;//scoreHand.ScoreHand(false, TurnCard);
-                    scores.Add(score);
-                    combos.Add(new List<Card>(scoreHand));
-
-                } else {
-                    start++;
-                    CountTotalByCombo(selected, total, start, cards, tempHand, scores, combos);
-                }
-            }
-        }
-
-        public override string DisplayHand() {
-            throw new NotImplementedException();
-        }
-
-        public override void ScoreHand() {
-            throw new NotImplementedException();
         }
     }
 }

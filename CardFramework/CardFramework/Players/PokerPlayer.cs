@@ -58,7 +58,7 @@ namespace CardFramework {
             FullHouseType = FullHouseTypes.None;
         }
 
-        public override void ScoreHand() {
+        public void ScoreHand() {
             if (Hand.Count == 5) {
                 GetScore();
             } else {
