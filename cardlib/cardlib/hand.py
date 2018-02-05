@@ -1,4 +1,4 @@
-from card import Card
+from cardlib.card import Card
 
 class Hand:
 

@@ -1,6 +1,8 @@
-from deck import StandardDeck
 from time import time
-from card import Card
+
+from deck import StandardDeck
+
+from cardlib.card import Card
 
 start = (time() * 1000)
 
